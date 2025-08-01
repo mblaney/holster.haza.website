@@ -43,25 +43,30 @@ const App = () => {
         </Typography>
         <Typography sx={{pt: 2}}>
           This server should only be used for testing, and only stores data for
-          a day. To test, try syncing data between browsers by opening this site
-          on different devices! The console is available below as "cons" and the
-          full API is available to create data and user accounts.
+          a day. The console is available below as <b>cons</b> and the full API
+          is available to create data and user accounts.
         </Typography>
-        <Typography sx={{pt: 2, pb: 4}}>
+        <Typography sx={{pt: 2}}>
           What commands can you run? Try putting data with:
           <br />
           <code>holster.get("hello").put("world", cons.log)</code>
           <br />
           <br />
-          Or create a user with (returns null on success):
+          Or create a user with:
           <br />
           <code>holster.user().create("username", "password", cons.log)</code>
+        </Typography>
+        <Typography sx={{pt: 2, pb: 4}}>
+          These commands return <b>null</b> on success, which you should see in
+          the console output. Try fetching data with:
+          <br />
+          <code>holster.get("hello", cons.log)</code>
           <br />
           <br />
-          All public data is written to a root node in the graph, so you can
-          also see what others have added using the wire spec:
+          Listen from another device or window while putting data to see the
+          browsers sync in real time:
           <br />
-          <code>holster.wire.get(&#123;"#": "root"&#125;, cons.log)</code>
+          <code>holster.get("hello").on(cons.log)</code>
         </Typography>
         <Divider sx={{borderColor: "#ffffff"}} />
       </Grid>
