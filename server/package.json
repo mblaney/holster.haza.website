@@ -1,0 +1,24 @@
+{
+  "name": "holster.haza.website",
+  "version": "0.1.0",
+  "description": "Server",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Malcolm Blaney",
+  "license": "Zlib, MIT, Apache-2.0",
+  "dependencies": {
+    "@mblaney/holster": "^1.0.6",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "prettier": "3.3.3"
+  },
+  "prettier": {
+    "semi": false,
+    "bracketSpacing": false,
+    "arrowParens": "avoid"
+  }
+}
