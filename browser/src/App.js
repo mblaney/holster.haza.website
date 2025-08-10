@@ -13,7 +13,7 @@ if (window.location.hostname !== "localhost") {
   peers = ["wss://" + window.location.hostname]
 }
 
-const holster = Holster({peers: peers})
+const holster = Holster({peers: peers, indexedDB: true})
 // This provides access to the API via the console.
 window.holster = holster
 
