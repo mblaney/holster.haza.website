@@ -40,10 +40,26 @@
 	      autofocus: true,
 	      storageID: "app-console",
       });
-      setTimeout(() => {
-        document.getElementsByClassName("MuiContainer-root")[0].appendChild(cons.element);
-      }, 1000);
+      
+      const addConsoleToPlayground = () => {
+        if (sessionStorage.getItem('showConsole') === 'true') {
+          const containers = document.getElementsByClassName("MuiContainer-root");
+          if (containers.length > 0 && !containers[0].contains(cons.element)) {
+            containers[0].appendChild(cons.element);
+          }
+        } else {
+          // Remove console if not on playground page
+          if (cons.element.parentNode) {
+            cons.element.parentNode.removeChild(cons.element);
+          }
+        }
+      };
+      
+      // Check every 500ms for session storage changes
+      setInterval(addConsoleToPlayground, 500);
+      
       cons.handleUncaughtErrors();
+      window.cons = cons;
     </script>
   </body>
 </html>

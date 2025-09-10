@@ -13,4 +13,11 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(dirname, "../browser/build", "index.html"))
 })
 
+// These redirects are required because the browser does local first routing,
+// which is fine except for an initial request or hard refresh, in which case
+// the server needs to respond to the request.
+app.get("/playground", (req, res) => {
+  res.redirect("/?redirect=playground")
+})
+
 Holster()

@@ -1,10 +1,19 @@
+import {useEffect} from "react"
 import Holster from "@mblaney/holster/src/holster.js"
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link as RouterLink,
+  Navigate,
+} from "react-router-dom"
 import Container from "@mui/material/Container"
-import Divider from "@mui/material/Divider"
 import Grid from "@mui/material/Grid"
 import Link from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
 import {Logo} from "./logo.js"
+import Playground from "./Playground.js"
+import HolsterVisualization from "./HolsterVisualization.js"
 
 // If on localhost assume Holster is directly available and use the default
 // settings, otherwise assume a secure connection is required.
@@ -17,7 +26,16 @@ const holster = Holster({peers: peers, indexedDB: true})
 // This provides access to the API via the console.
 window.holster = holster
 
-const App = () => {
+const params = new URLSearchParams(window.location.search)
+const pages = ["playground"]
+const redirect = params.get("redirect")
+const to = redirect ? (pages.includes(redirect) ? `/${redirect}` : "/") : ""
+
+const Home = () => {
+  useEffect(() => {
+    sessionStorage.removeItem("showConsole")
+  }, [])
+
   return (
     <Container maxWidth="md">
       <Grid container>
@@ -26,51 +44,61 @@ const App = () => {
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <Typography sx={{pt: 10}}>
-          Holster is a service for synchronising data between devices using
-          Node, Deno, Bun or the browser. Check out the{" "}
+        <Typography sx={{pt: 2}}>
+          Holster is a real-time data synchronisation service that seamlessly
+          connects devices using Node.js, Deno, Bun or the browser. Built with
+          modern ES modules, it features end-to-end encryption, intelligent
+          conflict resolution, and cross-platform compatibility.
+        </Typography>
+        <Typography
+          sx={{
+            p: 2,
+            m: 2,
+            backgroundColor: "#444444",
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+          }}
+        >
+          ✨ <strong>Real-time sync</strong> across all connected devices
+          <br />
+          🔐 <strong>Built-in encryption</strong> with user authentication
+          <br />⚡ <strong>Zero configuration</strong> with smart performance
+          optimisation
+          <br />
+          🌐 <strong>Universal compatibility</strong> - works everywhere
+          JavaScript runs
+        </Typography>
+        <Typography sx={{pt: 2, fontStyle: "italic"}}>
+          🚀 Holster is running live in your browser right now, automatically
+          synchronising with other clients connected to this server! Open
+          multiple browser windows to see it in action.
+        </Typography>
+        <div style={{margin: "24px 0"}}>
+          <HolsterVisualization />
+        </div>
+        <Typography sx={{pb: 2}}>
+          📘 Check out the{" "}
           <Link href="https://github.com/mblaney/holster/wiki">
             API documentation on GitHub
+          </Link>{" "}
+          and{" "}
+          <Link component={RouterLink} to="/playground">
+            try it out in the playground!
           </Link>
-          .
         </Typography>
-        <Typography sx={{pt: 2}}>
-          Holster requires a server for browsers to connect to. If you would
-          like to try using Holster without setting up a server, you can use
-          this site with:
-          <br />
-          <code>const holster = Holster("wss://holster.haza.website")</code>
-        </Typography>
-        <Typography sx={{pt: 2}}>
-          This server should only be used for testing, and only stores data for
-          a day. The console is available below as <b>cons</b> and the full API
-          is available to create data and user accounts.
-        </Typography>
-        <Typography sx={{pt: 2}}>
-          What commands can you run? Try putting data with:
-          <br />
-          <code>holster.get("hello").put("world", cons.log)</code>
-          <br />
-          <br />
-          Or create a user with:
-          <br />
-          <code>holster.user().create("username", "password", cons.log)</code>
-        </Typography>
-        <Typography sx={{pt: 2, pb: 4}}>
-          These commands return <b>null</b> on success, which you should see in
-          the console output. Try fetching data with:
-          <br />
-          <code>holster.get("hello", cons.log)</code>
-          <br />
-          <br />
-          Listen from another device or window while putting data to see the
-          browsers sync in real time:
-          <br />
-          <code>holster.get("hello").on(cons.log)</code>
-        </Typography>
-        <Divider sx={{borderColor: "#ffffff"}} />
       </Grid>
     </Container>
+  )
+}
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/playground" element={<Playground />} />
+        <Route path="/" element={to ? <Navigate to={to} /> : <Home />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
