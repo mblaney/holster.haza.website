@@ -51,8 +51,14 @@ const HolsterVisualization = () => {
 
     // Broadcast our presence at random intervals between 2-5 seconds
     let broadcastTimeoutId
+    const startTime = Date.now()
     const scheduleNextBroadcast = () => {
-      const randomDelay = 2000 + Math.random() * 3000 // 2-5 seconds
+      const elapsedSeconds = (Date.now() - startTime) / 1000
+      // Use shorter delays on page load then back off.
+      const randomDelay =
+        elapsedSeconds >= 10
+          ? 10000 + Math.random() * 2000
+          : 2000 + Math.random() * 3000
       broadcastTimeoutId = setTimeout(() => {
         const timestamp = Date.now()
         window.holster
@@ -243,7 +249,7 @@ const HolsterVisualization = () => {
 
       // Draw clients (smaller blue circles around the server)
       const clients = Object.keys(clientData)
-      const activeClients = clients.filter(id => now - clientData[id] < 10000)
+      const activeClients = clients.filter(id => now - clientData[id] < 20000)
 
       activeClients.forEach((clientID, index) => {
         const pos = getClientPosition(clientID, index, activeClients.length)
