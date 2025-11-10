@@ -34,6 +34,12 @@ const HolsterVisualization = () => {
   useEffect(() => {
     if (!window.holster || !myClientID.current) return
 
+    const getDayKey = () => {
+      const t = new Date()
+      return Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate())
+    }
+
+    const dayKey = getDayKey()
     const activeListeners = new Set()
 
     // Helper function to add pulse animation
@@ -63,6 +69,7 @@ const HolsterVisualization = () => {
         const timestamp = Date.now()
         window.holster
           .get("stats")
+          .next(dayKey)
           .next(myClientID.current)
           .put(timestamp, err => {
             if (err) {
@@ -93,8 +100,8 @@ const HolsterVisualization = () => {
       }, randomDelay)
     }
 
-    // Listen for new clients appearing in stats
-    window.holster.get("stats").on(data => {
+    // Listen for new clients appearing in today's stats
+    window.holster.get("stats").next(dayKey).on(data => {
       if (data) {
         Object.keys(data).forEach(clientID => {
           if (!activeListeners.has(clientID)) {
@@ -103,6 +110,7 @@ const HolsterVisualization = () => {
             // Set up individual listener for this client's timestamps
             window.holster
               .get("stats")
+              .next(dayKey)
               .next(clientID)
               .on(timestamp => {
                 if (timestamp && typeof timestamp === "number") {
